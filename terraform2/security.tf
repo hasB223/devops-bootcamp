@@ -17,3 +17,15 @@ resource "aws_vpc_security_group_egress_rule" "my_outbound_rule" {
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
+
+resource "aws_security_group" "my_sg_private" {
+  name   = "tf-private-sg"
+  vpc_id = aws_vpc.my_vpc.id
+  tags = { Name = "tf-private-sg" }
+}
+
+resource "aws_vpc_security_group_egress_rule" "my_outbound_rule_private" {
+  security_group_id = aws_security_group.my_sg_private.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+}

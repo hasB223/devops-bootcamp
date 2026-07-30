@@ -36,3 +36,25 @@ resource "aws_route_table_association" "my_link" {
   subnet_id      = aws_subnet.my_subnet.id
   route_table_id = aws_route_table.my_route_table.id
 }
+
+resource "aws_subnet" "my_subnet_private" {
+  vpc_id                  = aws_vpc.my_vpc.id
+  cidr_block              = "10.20.2.0/24"
+  availability_zone       = var.az
+  map_public_ip_on_launch = false
+  tags = {
+    Name = "tf-subnet-private"
+  }
+}
+
+resource "aws_route_table" "my_route_table_private" {
+  vpc_id = aws_vpc.my_vpc.id
+  tags = {
+    Name = "tf-rt-private"
+  }
+}
+
+resource "aws_route_table_association" "my_link_private" {
+  subnet_id      = aws_subnet.my_subnet_private.id
+  route_table_id = aws_route_table.my_route_table_private.id
+}
