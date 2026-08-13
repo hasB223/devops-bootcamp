@@ -17,16 +17,17 @@
         state: started
         enabled: yes
     - name: Tulis index.html
-      copy:
-        content: |
-          <html>
-            <head>
-              <title>{{ site_title }}</title>
-            </head>
-            <body>
-              <h1>{{ site_title }}</h1>
-              <p>Ini {{ inventory_hostname }}</p>
-              <p>Dimiliki oleh {{ site_owner }}</p>
-            </body>
-          </html>
+      template:
+        src: index.html.j2
         dest: /var/www/html/index.html
+    - name: Tulis config nginx
+      template:
+        src: nginx-site.conf.j2
+        dest: /etc/nginx/sites-available/default
+      notify: Restart-nginx
+
+  handlers:
+    - name: Restart-nginx
+      service:
+        name: nginx
+        state: restarted
