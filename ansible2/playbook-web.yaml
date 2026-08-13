@@ -24,10 +24,15 @@
       template:
         src: nginx-site.conf.j2
         dest: /etc/nginx/sites-available/default
-      notify: Restart-nginx
+      notify: 
+        - Restart-nginx
+        - Echo-Task
 
   handlers:
     - name: Restart-nginx
       service:
         name: nginx
         state: restarted
+    - name: Echo-Task
+      debug:
+        msg: "Tugas telah selesai dijalankan" 
