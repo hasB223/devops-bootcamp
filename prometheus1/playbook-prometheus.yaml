@@ -11,5 +11,5 @@
       - job_name: node_exporter
         static_configs:
           - targets:
-              - '<node1_private_ip>:9100'
-              - '<node2_private_ip>:9100'
+              - '10.20.1.186:9100'
+              - '10.20.1.208:9100'
