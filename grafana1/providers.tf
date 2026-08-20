@@ -12,7 +12,7 @@ terraform {
   }
   backend "s3" {
     bucket       = "bootcamp-2026-hasb"
-    key          = "prometheus1/terraform.tfstate"
+    key          = "grafana1/terraform.tfstate"
     region       = "ap-southeast-1"
     use_lockfile = true
   }

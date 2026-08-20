@@ -12,7 +12,7 @@ module "node1" {
   version                = "~> 6.0"
   name                   = "node1"
   ami                    = data.aws_ami.my_ami.id
-  instance_type          = "t3.micro"
+  instance_type          = "t3.small"
   subnet_id              = module.my_vpc.public_subnets[0]
   create_security_group  = false
   vpc_security_group_ids = [module.my_sg.id]
@@ -26,7 +26,7 @@ module "node2" {
   version                = "~> 6.0"
   name                   = "node2"
   ami                    = data.aws_ami.my_ami.id
-  instance_type          = "t3.micro"
+  instance_type          = "t3.small"
   subnet_id              = module.my_vpc.public_subnets[0]
   create_security_group  = false
   vpc_security_group_ids = [module.my_sg.id]
