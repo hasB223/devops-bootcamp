@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio | HasB</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.09);
+      --border-accent: rgba(139,92,246,0.45);
+      --accent: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: linear-gradient(135deg, #060d1f 0%, #0d0b2a 40%, #130820 70%, #0a1628 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── CANVAS ── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    nav, main, footer { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 6vw;
+      background: rgba(6,13,31,0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+    }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 10rem 6vw 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ambient glow orbs */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 15%; left: 5%;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: 10%; right: 2%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: drift 16s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(30px, 20px); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(139,92,246,0.08);
+      border: 1px solid rgba(139,92,246,0.3);
+      color: #c4b5fd;
+      padding: 0.38rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .grad {
+      background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 55%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      max-width: 540px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.82rem 1.9rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+    }
+
+    .btn-primary:hover { box-shadow: 0 8px 32px rgba(139,92,246,0.6); }
+
+    .btn-outline {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-accent);
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 6vw; position: relative; z-index: 1; }
+
+    .section-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .divider {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+      border-radius: 2px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text p { color: var(--muted); margin-bottom: 1rem; }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+
+    .skill-tag {
+      background: rgba(139,92,246,0.09);
+      border: 1px solid rgba(139,92,246,0.2);
+      color: #c4b5fd;
+      padding: 0.35rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: rgba(139,92,246,0.2);
+      border-color: rgba(139,92,246,0.4);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-3px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+
+    .project-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 35px rgba(139,92,246,0.07);
+    }
+
+    .project-icon { font-size: 2rem; margin-bottom: 1rem; }
+
+    .project-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    .project-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem; line-height: 1.65; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+
+    .tag {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      color: var(--muted);
+      padding: 0.25rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+    }
+
+    .project-links { display: flex; gap: 0.75rem; }
+
+    .link-btn {
+      font-size: 0.82rem;
+      color: #a78bfa;
+      text-decoration: none;
+      border: 1px solid rgba(139,92,246,0.3);
+      padding: 0.35rem 0.9rem;
+      border-radius: 8px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .link-btn:hover {
+      background: rgba(139,92,246,0.15);
+      border-color: rgba(139,92,246,0.5);
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience {
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline { display: flex; flex-direction: column; gap: 2rem; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 2rem;
+    }
+
+    .timeline-date { color: var(--muted); font-size: 0.85rem; padding-top: 0.2rem; }
+
+    .timeline-content {
+      border-left: 2px solid rgba(139,92,246,0.25);
+      padding-left: 1.75rem;
+      position: relative;
+    }
+
+    .timeline-content::before {
+      content: '';
+      position: absolute;
+      left: -6px; top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      box-shadow: 0 0 10px rgba(139,92,246,0.5);
+    }
+
+    .timeline-content h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.15rem; }
+
+    .timeline-content .company {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .timeline-content p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+
+    #contact .hero-sub { margin: 0 auto 2.5rem; }
+
+    .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.8rem 1.6rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.9rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139,92,246,0.15);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.25rem; }
+      .timeline-date { padding-top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated particle network -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">&lt;HasB /&gt;</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="badge"><span class="badge-dot"></span>Available for work</div>
+      <h1>Hi, I'm <span class="grad">HasB</span>.<br>I build things<br>for the web.</h1>
+      <p class="hero-sub">
+        Full-stack developer &amp; DevOps enthusiast passionate about building
+        scalable, reliable systems and clean user experiences.
+      </p>
+      <div class="btn-group">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <p class="section-label">About Me</p>
+      <h2>Who I Am</h2>
+      <div class="divider"></div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I'm a developer with a strong focus on DevOps practices, cloud infrastructure,
+            and modern web development. I enjoy turning complex problems into simple,
+            elegant solutions.
+          </p>
+          <p>
+            Currently working through a DevOps bootcamp in 2026, deepening my knowledge
+            of CI/CD pipelines, containerisation, and infrastructure as code.
+          </p>
+          <p>
+            When I'm not coding, I'm exploring new technologies, contributing to open
+            source, or levelling up my cloud certifications.
+          </p>
+          <div class="skills">
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Docker</span>
+            <span class="skill-tag">Kubernetes</span>
+            <span class="skill-tag">AWS</span>
+            <span class="skill-tag">Terraform</span>
+            <span class="skill-tag">CI/CD</span>
+            <span class="skill-tag">Linux</span>
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">Node.js</span>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">Years Coding</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">20+</div>
+            <div class="stat-label">Projects Built</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Tech Stack</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Curiosity</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <p class="section-label">Work</p>
+      <h2>Featured Projects</h2>
+      <div class="divider"></div>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-icon">🚀</div>
+          <h3>DevOps Pipeline Starter</h3>
+          <p>A production-ready CI/CD pipeline template using GitHub Actions, Docker, and AWS ECS for zero-downtime deployments.</p>
+          <div class="tag-row">
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Docker</span>
+            <span class="tag">AWS ECS</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+            <a href="#" class="link-btn">Live Demo</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">☁️</div>
+          <h3>Cloud Infrastructure IaC</h3>
+          <p>Terraform modules for provisioning a scalable, secure AWS VPC with EKS cluster, RDS, and monitoring via CloudWatch.</p>
+          <div class="tag-row">
+            <span class="tag">Terraform</span>
+            <span class="tag">AWS</span>
+            <span class="tag">Kubernetes</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">🌐</div>
+          <h3>Private Site</h3>
+          <p>This portfolio site — statically hosted, version-controlled, and deployed via automated pipeline. Fast and minimal.</p>
+          <div class="tag-row">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">Git</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">📊</div>
+          <h3>Monitoring Dashboard</h3>
+          <p>Real-time metrics dashboard built with Grafana and Prometheus, containerised with Docker Compose for easy deployment.</p>
+          <div class="tag-row">
+            <span class="tag">Grafana</span>
+            <span class="tag">Prometheus</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+            <a href="#" class="link-btn">Live Demo</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">🔐</div>
+          <h3>Secrets Manager CLI</h3>
+          <p>A command-line tool for securely managing and rotating secrets across multiple cloud providers and environments.</p>
+          <div class="tag-row">
+            <span class="tag">Python</span>
+            <span class="tag">AWS SSM</span>
+            <span class="tag">Vault</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-icon">🤖</div>
+          <h3>Auto-Scale Bot</h3>
+          <p>Kubernetes operator that intelligently auto-scales workloads based on custom metrics and predictive load patterns.</p>
+          <div class="tag-row">
+            <span class="tag">Go</span>
+            <span class="tag">Kubernetes</span>
+            <span class="tag">gRPC</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="link-btn">GitHub</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <p class="section-label">Career</p>
+      <h2>Experience</h2>
+      <div class="divider"></div>
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-date">2026 — Present</div>
+          <div class="timeline-content">
+            <h3>DevOps Bootcamp Student</h3>
+            <div class="company">DevOps Bootcamp 2026</div>
+            <p>Hands-on training in Docker, Kubernetes, CI/CD, Terraform, AWS, and cloud-native architecture patterns.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2024 — 2026</div>
+          <div class="timeline-content">
+            <h3>Full-Stack Developer</h3>
+            <div class="company">Personal Projects &amp; Freelance</div>
+            <p>Built and deployed web applications for various clients, focusing on performance, accessibility, and clean code.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2022 — 2024</div>
+          <div class="timeline-content">
+            <h3>Junior Developer</h3>
+            <div class="company">Self-Taught Journey</div>
+            <p>Started coding from scratch, working through projects in HTML, CSS, JavaScript, Python, and eventually backend systems.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <p class="section-label">Contact</p>
+      <h2>Let's Work Together</h2>
+      <div class="divider" style="margin: 1rem auto 1.5rem;"></div>
+      <p class="hero-sub">
+        Have a project in mind or want to chat about DevOps, cloud, or web dev?
+        My inbox is always open.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:has.bc3@gmail.com" class="contact-link">
+          <span>✉</span> has.bc3@gmail.com
+        </a>
+        <a href="https://github.com/hasB223" class="contact-link" target="_blank" rel="noopener">
+          <span>⌥</span> GitHub
+        </a>
+        <a href="#" class="contact-link">
+          <span>💼</span> LinkedIn
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Designed &amp; built by HasB &mdash; &copy; 2026</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles;
+
+    const COUNT = 90;
+    const MAX_DIST = 160;
+    const SPEED = 0.28;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    class Dot {
+      constructor() { this.init(); }
+      init() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * SPEED;
+        this.vy = (Math.random() - 0.5) * SPEED;
+        this.r = Math.random() * 1.5 + 0.5;
+        this.a = Math.random() * 0.45 + 0.15;
+      }
+      tick() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > W) this.vx *= -1;
+        if (this.y < 0 || this.y > H) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(139,92,246,${this.a})`;
+        ctx.fill();
+      }
+    }
+
+    function setup() {
+      resize();
+      particles = Array.from({ length: COUNT }, () => new Dot());
+    }
+
+    function drawLines() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const d = Math.sqrt(dx * dx + dy * dy);
+          if (d < MAX_DIST) {
+            const a = (1 - d / MAX_DIST) * 0.13;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(139,92,246,${a})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => { p.tick(); p.draw(); });
+      drawLines();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      particles.forEach(p => p.init());
+    });
+
+    setup();
+    loop();
+  </script>
+
+</body>
+</html>
