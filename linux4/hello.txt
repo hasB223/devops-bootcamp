@@ -1,0 +1,3 @@
+hello dari linux 4
+
+hello from vim
