@@ -1,0 +1,3 @@
+hello world
+dari linux 1
+newline di sini
